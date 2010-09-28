@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace Orva
 {
-	
 	public class AvroSchema
 	{
+
 		/// <summary>
 		/// Produce an AVRO schema (a special JSON string)
 		/// </summary>
@@ -33,13 +33,16 @@ namespace Orva
 		{
 			return GetSchema (typeof(T));
 		}
-		
+
 		private static string GetSchema (Type t, HashSet<Type> traversedTypes)
 		{
 			var retval = "";
 			//lookup the type in the typeconverter directory.
-			
-			if (t == typeof(string)) {
+			if (t == typeof(bool)) {
+				retval = "{\"type\":\"boolean\"}";
+			} else if (t == null) {
+				retval = "{\"type\":\"null\"}";
+			} else if (t == typeof(string)) {
 				retval = "{\"type\":\"string\"}";
 			} else if (t == typeof(long)) {
 				retval = "{\"type\":\"long\"}";
@@ -55,8 +58,8 @@ namespace Orva
 				if (traversedTypes.Contains (t)) {
 					var typeName = GetTypeNameAndNamespace (t);
 					
-					var name = typeName.Item1.Length > 0 ? ",\"namespace\":\"" + typeName.Item1 + "\"" : "";
-					retval = "{\"type\":\"" + typeName.Item2 + "\"" + name + "}";
+					var name = typeName.Key.Length > 0 ? ",\"namespace\":\"" + typeName.Value + "\"" : "";
+					retval = "{\"type\":\"" + typeName.Value + "\"" + name + "}";
 					
 				} else {
 					
@@ -67,32 +70,32 @@ namespace Orva
 			return retval;
 		}
 
-		private static Tuple<String, String> GetTypeNameAndNamespace (Type t)
+		private static KeyValuePair<String, String> GetTypeNameAndNamespace (Type t)
 		{
-			var retval = Tuple.Create ("", "");
+			var retval = new KeyValuePair<String, String> ("", "");
 			if (t == typeof(string)) {
-				retval = Tuple.Create ("", "string");
+				retval = new KeyValuePair<String, String> ("", "string");
 			} else if (t == typeof(long)) {
-				retval = Tuple.Create ("", "long");
+				retval = new KeyValuePair<String, String> ("", "long");
 			} else if (t == typeof(int)) {
-				retval = Tuple.Create ("", "int");
+				retval = new KeyValuePair<String, String> ("", "int");
 			} else if (t == typeof(float)) {
-				retval = Tuple.Create ("", "float");
+				retval = new KeyValuePair<String, String> ("", "float");
 			} else if (t == typeof(double)) {
-				retval = Tuple.Create ("", "double");
+				retval = new KeyValuePair<String, String> ("", "double");
 			} else if (t == typeof(byte[]) || t == typeof(byte)) {
-				retval = Tuple.Create ("", "bytes");
+				retval = new KeyValuePair<String, String> ("", "bytes");
 			} else if (t == typeof(Guid)) {
-				retval = Tuple.Create ("", "guid");
+				retval = new KeyValuePair<String, String> ("", "guid");
 			} else if (t == typeof(decimal)) {
-				retval = Tuple.Create ("", "decimal");
+				retval = new KeyValuePair<String, String> ("", "decimal");
 			} else if (t == typeof(DateTime)) {
-				retval = Tuple.Create ("", "utcdatetime");
+				retval = new KeyValuePair<String, String> ("", "utcdatetime");
 			} else if (t == typeof(TimeSpan)) {
-				retval = Tuple.Create (t.Namespace, t.Name);
+				retval = new KeyValuePair<String, String> (t.Namespace, t.Name);
 				//should probably handle dictionaries and enumerables
 			} else {
-				retval = Tuple.Create (t.Namespace, t.Name);
+				retval = new KeyValuePair<String, String> (t.Namespace, t.Name);
 			}
 			return retval;
 		}
@@ -103,7 +106,7 @@ namespace Orva
 			if (t == typeof(Nullable<>)) {
 				
 				var generic = GetTypeNameAndNamespace (t.GetGenericArguments ().ElementAt (0));
-				var name = generic.Item1.Length > 0 ? generic.Item1 + "." + generic.Item2 : generic.Item2;
+				var name = generic.Key.Length > 0 ? generic.Key + "." + generic.Value : generic.Value;
 				retval = "[\"" + name + "\", null]";
 				
 			} else if (t == typeof(Guid)) {
@@ -132,17 +135,17 @@ namespace Orva
 				if (traversedTypes.Contains (t)) {
 					var typeName = GetTypeNameAndNamespace (t);
 					
-					var name = typeName.Item1.Length > 0 ? ",\"namespace\":\"" + typeName.Item1 + "\"" : "";
-					retval = "{\"type\":\"" + typeName.Item2 + "\"" + name + "}";
+					var name = typeName.Key.Length > 0 ? ",\"namespace\":\"" + typeName.Key + "\"" : "";
+					retval = "{\"type\":\"" + typeName.Value + "\"" + name + "}";
 				} else {
 					//this is a user-defined type. nice.
 					var typeName = GetTypeNameAndNamespace (t);
-					var name = typeName.Item1.Length > 0 ? ",\"namespace\":\"" + typeName.Item1 + "\"" : "";
-					retval = "{\"type\":\"record\", \"name\":\"" + typeName.Item2 + "\"" + name + "\",\"fields\":[";
+					var name = typeName.Key.Length > 0 ? ",\"namespace\":\"" + typeName.Key + "\"" : "";
+					retval = "{\"type\":\"record\", \"name\":\"" + typeName.Value + "\"" + name + "\",\"fields\":[";
 					
 					foreach (var p in t.GetProperties (BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance)) {
 						var propType = GetTypeNameAndNamespace (p.PropertyType);
-						var ns = propType.Item1.Length > 0 ? propType.Item1 + "." + propType.Item2 : propType.Item2;
+						var ns = propType.Key.Length > 0 ? propType.Key + "." + propType.Value : propType.Value;
 						if (traversedTypes.Contains (p.PropertyType)) {
 							retval += "{\"name\":\"" + p.Name + "\", \"type\":\"" + ns + "\"},";
 						} else {
@@ -159,7 +162,7 @@ namespace Orva
 			traversedTypes.Add (t);
 			return retval;
 		}
-
+		
 	}
 }
 

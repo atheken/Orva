@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orva", "Orva\Orva.csproj", "{DD8FDBF4-542E-49EB-A0A5-77A146F66757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orva.Tests", "Orva.Tests\Orva.Tests.csproj", "{57EFC45D-04C7-48EB-B034-E3BFB490C475}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Default|Any CPU = Default|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57EFC45D-04C7-48EB-B034-E3BFB490C475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57EFC45D-04C7-48EB-B034-E3BFB490C475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57EFC45D-04C7-48EB-B034-E3BFB490C475}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{57EFC45D-04C7-48EB-B034-E3BFB490C475}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{57EFC45D-04C7-48EB-B034-E3BFB490C475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57EFC45D-04C7-48EB-B034-E3BFB490C475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8FDBF4-542E-49EB-A0A5-77A146F66757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8FDBF4-542E-49EB-A0A5-77A146F66757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8FDBF4-542E-49EB-A0A5-77A146F66757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8FDBF4-542E-49EB-A0A5-77A146F66757}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Orva\Orva.csproj
+	EndGlobalSection
+EndGlobal
